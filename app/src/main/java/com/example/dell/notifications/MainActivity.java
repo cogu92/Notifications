@@ -12,6 +12,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RemoteViews;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -44,21 +45,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void triggerCustomNotification() {
-        NotificationCompat.Builder mBuildes= (NotificationCompat.Builder) new NotificationCompat.Builder(this).setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("My Notification")
-                .setContentText("This is a simple text for my notification").setAutoCancel(true);
-        Log.d(MainActivity.TAG,"triggerRegularNotification");
-        Intent  mNotifiationInten = new Intent(this,Notification.class);
-        PendingIntent mPendingIntent=PendingIntent.getActivity(this,1,mNotifiationInten,PendingIntent.FLAG_CANCEL_CURRENT);
-        mBuildes.setContentIntent(mPendingIntent);
+        NotificationCompat.Builder mBuildes= (NotificationCompat.Builder) new NotificationCompat.Builder(this).setSmallIcon(R.drawable.messenger_icon);
+        RemoteViews mRemoteview=new RemoteViews(this.getPackageName(),R.layout.layout_custom_notification);
+        mRemoteview.setImageViewResource(R.id.imageViewNotification,R.drawable.messenger_icon);
+        mRemoteview.setTextViewText(R.id.txtViewTitle,this.getResources().getString(R.string.custom_notify_text_1));
+        mRemoteview.setTextViewText(R.id.txtViewBody,this.getResources().getString(R.string.custom_notify_text_2));
+        mRemoteview.setTextViewText(R.id.txtViewFootnote,this.getResources().getString(R.string.custom_notify_text_3));
+       mBuildes.setContent(mRemoteview);
         NotificationManager mNotificationManager=(NotificationManager) this.getSystemService(Service.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(2,mBuildes.build());
+        mNotificationManager.notify(1,mBuildes.build());
+
     }
 
     private void triggerRegularNotification() {
         NotificationCompat.Builder mBuildes= (NotificationCompat.Builder) new NotificationCompat.Builder(this).setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Warning")
-                .setContentText("Auto Destruction ");
+                .setContentText("Auto Destruction ").setAutoCancel(true);
         Log.d(MainActivity.TAG,"triggerRegularNotification");
         Intent  mNotifiationInten = new Intent(this,Notification.class);
         PendingIntent mPendingIntent=PendingIntent.getActivity(this,1,mNotifiationInten,PendingIntent.FLAG_CANCEL_CURRENT);
